@@ -9,13 +9,13 @@
   <title>从vue源码看测试集成 | Zaber的主页</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   <meta name="description" content="从测试命令开始：入口测试指令npm run test;在package.json 当中；1&quot;test&quot;: &quot;npm run lint &amp;amp;&amp;amp; flow check &amp;amp;&amp;amp; npm run test:types &amp;amp;&amp;amp; npm run test:cover &amp;amp;&amp;amp; npm run test:e2e -- --env phantomjs &amp;amp">
-<meta name="keywords" content="vue">
+<meta name="keywords" content="javascript">
 <meta property="og:type" content="article">
 <meta property="og:title" content="从vue源码看测试集成">
 <meta property="og:url" content="http://yoursite.com/2017/12/21/vue-test/index.html">
 <meta property="og:site_name" content="Zaber的主页">
 <meta property="og:description" content="从测试命令开始：入口测试指令npm run test;在package.json 当中；1&quot;test&quot;: &quot;npm run lint &amp;amp;&amp;amp; flow check &amp;amp;&amp;amp; npm run test:types &amp;amp;&amp;amp; npm run test:cover &amp;amp;&amp;amp; npm run test:e2e -- --env phantomjs &amp;amp">
-<meta property="og:updated_time" content="2018-01-29T17:00:29.201Z">
+<meta property="og:updated_time" content="2018-01-29T17:03:08.190Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="从vue源码看测试集成">
 <meta name="twitter:description" content="从测试命令开始：入口测试指令npm run test;在package.json 当中；1&quot;test&quot;: &quot;npm run lint &amp;amp;&amp;amp; flow check &amp;amp;&amp;amp; npm run test:types &amp;amp;&amp;amp; npm run test:cover &amp;amp;&amp;amp; npm run test:e2e -- --env phantomjs &amp;amp">
@@ -163,7 +163,7 @@
 
         
         <a href="/2017/12/21/vue-test/" class="archive-article-date">
-  	<time datetime="2017-12-21T13:25:00.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-12-21</time>
+  	<time datetime="2017-12-21T15:32:00.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-12-21</time>
 </a>
         
       </header>
@@ -171,7 +171,7 @@
     <div class="article-entry" itemprop="articleBody">
       
         <h3 id="从测试命令开始："><a href="#从测试命令开始：" class="headerlink" title="从测试命令开始："></a>从测试命令开始：</h3><p>入口测试指令npm run test;<br>在package.json 当中；<br><figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">"<span class="selector-tag">test</span>": "<span class="selector-tag">npm</span> <span class="selector-tag">run</span> <span class="selector-tag">lint</span> &amp;&amp; <span class="selector-tag">flow</span> <span class="selector-tag">check</span> &amp;&amp; <span class="selector-tag">npm</span> <span class="selector-tag">run</span> <span class="selector-tag">test</span><span class="selector-pseudo">:types</span> &amp;&amp; <span class="selector-tag">npm</span> <span class="selector-tag">run</span> <span class="selector-tag">test</span><span class="selector-pseudo">:cover</span> &amp;&amp; <span class="selector-tag">npm</span> <span class="selector-tag">run</span> <span class="selector-tag">test</span><span class="selector-pseudo">:e2e</span> <span class="selector-tag">--</span> <span class="selector-tag">--env</span> <span class="selector-tag">phantomjs</span> &amp;&amp; <span class="selector-tag">npm</span> <span class="selector-tag">run</span> <span class="selector-tag">test</span><span class="selector-pseudo">:ssr</span> &amp;&amp; <span class="selector-tag">npm</span> <span class="selector-tag">run</span> <span class="selector-tag">test</span><span class="selector-pseudo">:weex"</span>,</span><br></pre></td></tr></table></figure></p>
-<p>前三条是语法检测，按照各自的代码格式或者语法配置说明配置好之后就能顺利跑起来，并且带自动纠正功能。</p>
+<p>前三条是语法检测，按照各自的代码格式或者语法配置说明配置好之后就能顺利跑起来，并且带自动纠正功能。<br><a id="more"></a></p>
 <h3 id="npm-run-test-cover"><a href="#npm-run-test-cover" class="headerlink" title="npm run test:cover"></a>npm run test:cover</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">"test:cover"</span>: <span class="string">"karma start test/unit/karma.cover.config.js"</span></span><br></pre></td></tr></table></figure>
 <p>单元测试部分，能够生成测试覆盖率报告；<br>首先看入口测试配置：karma.cover.config.js；<br>第一行导入了所有测试都引入的基本配置文件karma.base.config.js;其中定义了单元测试的基本框架以及入口文件等；</p>
 <p>结合两份配置分析。</p>
@@ -233,7 +233,7 @@
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">vue</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">javascript</a>
         		</li>
       		
 		</ul>
@@ -419,6 +419,10 @@
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">html</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">js</a>
               </li>
              
@@ -435,7 +439,7 @@
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">html</a>
+                <a href="javascript:void(0)" class="js-tag color1">javascript</a>
               </li>
              
               <li class="article-tag-list-item">

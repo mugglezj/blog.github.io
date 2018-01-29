@@ -161,7 +161,7 @@
 
         
         <a href="/2017/12/21/vue-test/" class="archive-article-date">
-  	<time datetime="2017-12-21T13:25:00.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-12-21</time>
+  	<time datetime="2017-12-21T15:32:00.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-12-21</time>
 </a>
         
       </header>
@@ -169,35 +169,10 @@
     <div class="article-entry" itemprop="articleBody">
       
         <h3 id="从测试命令开始："><a href="#从测试命令开始：" class="headerlink" title="从测试命令开始："></a>从测试命令开始：</h3><p>入口测试指令npm run test;<br>在package.json 当中；<br><figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">"<span class="selector-tag">test</span>": "<span class="selector-tag">npm</span> <span class="selector-tag">run</span> <span class="selector-tag">lint</span> &amp;&amp; <span class="selector-tag">flow</span> <span class="selector-tag">check</span> &amp;&amp; <span class="selector-tag">npm</span> <span class="selector-tag">run</span> <span class="selector-tag">test</span><span class="selector-pseudo">:types</span> &amp;&amp; <span class="selector-tag">npm</span> <span class="selector-tag">run</span> <span class="selector-tag">test</span><span class="selector-pseudo">:cover</span> &amp;&amp; <span class="selector-tag">npm</span> <span class="selector-tag">run</span> <span class="selector-tag">test</span><span class="selector-pseudo">:e2e</span> <span class="selector-tag">--</span> <span class="selector-tag">--env</span> <span class="selector-tag">phantomjs</span> &amp;&amp; <span class="selector-tag">npm</span> <span class="selector-tag">run</span> <span class="selector-tag">test</span><span class="selector-pseudo">:ssr</span> &amp;&amp; <span class="selector-tag">npm</span> <span class="selector-tag">run</span> <span class="selector-tag">test</span><span class="selector-pseudo">:weex"</span>,</span><br></pre></td></tr></table></figure></p>
-<p>前三条是语法检测，按照各自的代码格式或者语法配置说明配置好之后就能顺利跑起来，并且带自动纠正功能。</p>
-<h3 id="npm-run-test-cover"><a href="#npm-run-test-cover" class="headerlink" title="npm run test:cover"></a>npm run test:cover</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">"test:cover"</span>: <span class="string">"karma start test/unit/karma.cover.config.js"</span></span><br></pre></td></tr></table></figure>
-<p>单元测试部分，能够生成测试覆盖率报告；<br>首先看入口测试配置：karma.cover.config.js；<br>第一行导入了所有测试都引入的基本配置文件karma.base.config.js;其中定义了单元测试的基本框架以及入口文件等；</p>
-<p>结合两份配置分析。</p>
-<p>首先是一些基本概念：</p>
-<ul>
-<li>Karma是一个基于Node.js的JavaScript测试执行过程管理工具（Test Runner）。</li>
-<li>Jasmine是单元测试框架，本单将介绍用Karma让Jasmine测试自动化完成。</li>
-<li>istanbul是一个单元测试代码覆盖率检查工具，可以很直观地告诉我们，单元测试对代码的控制程度。</li>
-</ul>
-<h4 id="使用karma框架"><a href="#使用karma框架" class="headerlink" title="使用karma框架"></a>使用karma框架</h4><ul>
-<li><a href="http://karma-runner.github.io/2.0/index.html" target="_blank" rel="noopener">karma</a>介绍;</li>
-<li><a href="https://jasmine.github.io/1.3/introduction.html" target="_blank" rel="noopener">jasmine</a>语法介绍;</li>
-</ul>
-<p>karma配置中定义了：</p>
-<ul>
-<li>使用Jasmine单元测试框架；</li>
-<li>karma-webpack 的基本配置（对于模块化的源代码，需要使用webpack进行预处理）；</li>
-<li>待测试的文件和测试文件的总入口：’index.js’（在index.js中通过require.content来动态引入需要测试的文件，减少源码更改之后测试配置改动的需求）；</li>
-<li>定义js文件需要使用的预处理器：[‘webpack’,’sourcemap’];</li>
-<li>使用phantomjs无头浏览器，不实例化页面，加快测试速度；</li>
-<li>报告类型选用[‘mocha’, ‘coverage’];其中 <a href="https://www.npmjs.com/package/karma-mocha-reporter" target="_blank" rel="noopener">karma-mocha-reporter</a>用来更改报告样式;<a href="https://www.npmjs.com/package/karma-coverage" target="_blank" rel="noopener">coverage</a>用来生成测试覆盖率报告；</li>
-<li>coverageReporter配置测试覆盖率报告的风格，已经报告生成目录；</li>
-</ul>
-<p>注意的点:<br>一般我们在配置测试覆盖率的时候写法是：<br><figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">preprocessors:</span> &#123;</span><br><span class="line">    <span class="string">'./src/*.js'</span>: [<span class="string">'coverage'</span>]</span><br><span class="line">&#125;,</span><br></pre></td></tr></table></figure></p>
-<p>使用coverage预处理把src目录下的所有js文件全都加入覆盖率统计当中；<br>但是使用karma-coverage检测Webpack打包后的代码，会出现覆盖率出错的情况,因为一般代码覆盖率的检测是需要统计被测试代码中需要测试的量，比如函数、行数等信息，然而打包后的代码因为被混入了很多别的代码，或者是变量被私有化了，这些统计就会出问题。</p>
-<p>在这里作者使用了<a href="http://gotwarlost.github.io/istanbul/" target="_blank" rel="noopener">babel-plugin-istanbul</a><br>插件在代码打包之前进行统计;<br>自此，单元测试配置基本解决；剩下的就是测试代码的编写；<br>遵循jasmine使用规范；使用describe加回调函数的套件；一步步完成对源代码的测试用例编写；完善覆盖率</p>
-<h4 id="npm-run-test-e2e"><a href="#npm-run-test-e2e" class="headerlink" title="npm run test:e2e"></a>npm run test:e2e</h4><p>端对端测试</p>
-
+<p>前三条是语法检测，按照各自的代码格式或者语法配置说明配置好之后就能顺利跑起来，并且带自动纠正功能。<br>
+        
+          <a class="article-more-a" href="/2017/12/21/vue-test/#more">more >></a>
+        
       
 
       
@@ -210,7 +185,7 @@
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">vue</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">javascript</a>
         		</li>
       		
 		</ul>
@@ -309,79 +284,6 @@
 
 
   
-    <article id="post-how-browsers-work" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/02/17/how-browsers-work/">浏览器内部工作原理</a>
-    </h1>
-  
-
-        
-        <a href="/2017/02/17/how-browsers-work/" class="archive-article-date">
-  	<time datetime="2017-02-17T13:25:00.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-02-17</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h2 id="浏览器的高层结构"><a href="#浏览器的高层结构" class="headerlink" title="浏览器的高层结构"></a>浏览器的高层结构</h2><h3 id="浏览器的主要组件为："><a href="#浏览器的主要组件为：" class="headerlink" title="浏览器的主要组件为："></a>浏览器的主要组件为：</h3><ol>
-<li>用户界面 - 包括地址栏、前进/后退按钮、书签菜单等。除了浏览器主窗口显示的您请求的页面外，其他显示的各个部分都属于用户界面。</li>
-<li>浏览器引擎 - 在用户界面和呈现引擎之间传送指令。</li>
-<li>呈现引擎 - 负责显示请求的内容。如果请求的内容是 HTML，它就负责解析 HTML 和 CSS 内容，并将解析后的内容显示在屏幕上。</li>
-<li>网络 - 用于网络调用，比如 HTTP 请求。其接口与平台无关，并为所有平台提供底层实现。</li>
-<li>用户界面后端 - 用于绘制基本的窗口小部件，比如组合框和窗口。其公开了与平台无关的通用接口，而在底层使用操作系统的用户界面方法。</li>
-<li>JavaScript 解释器。用于解析和执行 JavaScript 代码。</li>
-<li>数据存储。这是持久层。浏览器需要在硬盘上保存各种数据，例如 Cookie。新的 HTML 规范 (HTML5) 定义了“网络数据库”，这是一个完整（但是轻便）的浏览器内数据库。</li>
-</ol>
-        
-          <a class="article-more-a" href="/2017/02/17/how-browsers-work/#more">more >></a>
-        
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">html</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2017/02/17/how-browsers-work/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-
-
-
-
-
-
-
-
-  
     <article id="post-js-unit-test" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -447,6 +349,79 @@
       
         <p class="article-more-link">
           <a class="article-more-a" href="/2017/02/17/js-unit-test/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+
+
+
+
+
+
+
+
+  
+    <article id="post-how-browsers-work" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/02/17/how-browsers-work/">浏览器内部工作原理</a>
+    </h1>
+  
+
+        
+        <a href="/2017/02/17/how-browsers-work/" class="archive-article-date">
+  	<time datetime="2017-02-17T13:25:00.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-02-17</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="浏览器的高层结构"><a href="#浏览器的高层结构" class="headerlink" title="浏览器的高层结构"></a>浏览器的高层结构</h2><h3 id="浏览器的主要组件为："><a href="#浏览器的主要组件为：" class="headerlink" title="浏览器的主要组件为："></a>浏览器的主要组件为：</h3><ol>
+<li>用户界面 - 包括地址栏、前进/后退按钮、书签菜单等。除了浏览器主窗口显示的您请求的页面外，其他显示的各个部分都属于用户界面。</li>
+<li>浏览器引擎 - 在用户界面和呈现引擎之间传送指令。</li>
+<li>呈现引擎 - 负责显示请求的内容。如果请求的内容是 HTML，它就负责解析 HTML 和 CSS 内容，并将解析后的内容显示在屏幕上。</li>
+<li>网络 - 用于网络调用，比如 HTTP 请求。其接口与平台无关，并为所有平台提供底层实现。</li>
+<li>用户界面后端 - 用于绘制基本的窗口小部件，比如组合框和窗口。其公开了与平台无关的通用接口，而在底层使用操作系统的用户界面方法。</li>
+<li>JavaScript 解释器。用于解析和执行 JavaScript 代码。</li>
+<li>数据存储。这是持久层。浏览器需要在硬盘上保存各种数据，例如 Cookie。新的 HTML 规范 (HTML5) 定义了“网络数据库”，这是一个完整（但是轻便）的浏览器内数据库。</li>
+</ol>
+        
+          <a class="article-more-a" href="/2017/02/17/how-browsers-work/#more">more >></a>
+        
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">html</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2017/02/17/how-browsers-work/">展开全文 >></a>
         </p>
       
 
@@ -699,9 +674,14 @@
 <li>（1）对象的状态不受外界影响。Promise 对象代表一个异步操作，有三种状态：Pending（进行中）、Resolved（已完成，又称 Fulfilled）和 Rejected（已失败）。只有异步操作的结果，可以决定当前是哪一种状态，任何其他操作都无法改变这个状态。这也是 Promise 这个名字的由来，它的英语意思就是「承诺」，表示其他手段无法改变。</li>
 <li>（2）一旦状态改变，就不会再变，任何时候都可以得到这个结果。Promise 对象的状态改变，只有两种可能：从 Pending 变为 Resolved 和从 Pending 变为 Rejected。只要这两种情况发生，状态就凝固了，不会再变了，会一直保持这个结果。就算改变已经发生了，你再对 Promise 对象添加回调函数，也会立即得到这个结果。这与事件（Event）完全不同，事件的特点是，如果你错过了它，再去监听，是得不到结果的。<br>有了 Promise 对象，就可以将异步操作以同步操作的流程表达出来，避免了层层嵌套的回调函数。此外，Promise 对象提供统一的接口，使得控制异步操作更加容易。<br>Promise 也有一些缺点。首先，无法取消 Promise，一旦新建它就会立即执行，无法中途取消。其次，如果不设置回调函数，Promise 内部抛出的错误，不会反应到外部。第三，当处于 Pending 状态时，无法得知目前进展到哪一个阶段（刚刚开始还是即将完成）。</li>
 </ul>
-        
-          <a class="article-more-a" href="/2017/01/10/promise/#more">more >></a>
-        
+<h2 id="用法"><a href="#用法" class="headerlink" title="用法"></a>用法</h2><p>在写微信小程序的时候，有时需要等第一个异步请求返回内容之后再开始第二个异步请求，然后再做逻辑处理，<br>受够了层层嵌套的回调,决心换一个直观的写法。</p>
+<p>原写法：<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">$.ajax(&#123;</span><br><span class="line">    method:<span class="string">''</span>,</span><br><span class="line">    data:<span class="string">''</span>,</span><br><span class="line">    success:<span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">        $.ajax(&#123;</span><br><span class="line">            success:<span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">              <span class="comment">//Do something</span></span><br><span class="line">            &#125;,</span><br><span class="line">            error:<span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">              alert(<span class="string">'err'</span>)</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;)</span><br><span class="line">    &#125;,</span><br><span class="line">    error:<span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">      alert(<span class="string">'err'</span>)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure></p>
+<p>用了promise之后：<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> a = <span class="keyword">new</span> <span class="built_in">Promise</span>(<span class="function"><span class="keyword">function</span>(<span class="params">resolve,reject</span>)</span>&#123;</span><br><span class="line">    $.ajax(&#123;</span><br><span class="line">        success:<span class="function"><span class="keyword">function</span>(<span class="params">data</span>) </span>&#123;</span><br><span class="line">          resolve(data)</span><br><span class="line">        &#125;,</span><br><span class="line">        error:<span class="function"><span class="keyword">function</span>(<span class="params">e</span>) </span>&#123;</span><br><span class="line">          reject(e)</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;)</span><br><span class="line">&#125;)</span><br><span class="line"><span class="keyword">var</span> b = <span class="keyword">new</span> <span class="built_in">Promise</span>(<span class="function"><span class="keyword">function</span>(<span class="params">resolve,reject</span>)</span>&#123;</span><br><span class="line">            $.ajax(&#123;</span><br><span class="line">                success:<span class="function"><span class="keyword">function</span>(<span class="params">data</span>) </span>&#123;</span><br><span class="line">                  resolve(data)</span><br><span class="line">                &#125;,</span><br><span class="line">                error:<span class="function"><span class="keyword">function</span>(<span class="params">e</span>) </span>&#123;</span><br><span class="line">                  reject(e)</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;)</span><br><span class="line">        &#125;)</span><br><span class="line">a().then(<span class="function"><span class="keyword">function</span>(<span class="params">data</span>)</span>&#123;<span class="built_in">console</span>.log(data);<span class="keyword">return</span> b&#125;).then(<span class="function"><span class="params">data</span>=&gt;</span><span class="built_in">console</span>.log(data));</span><br></pre></td></tr></table></figure></p>
+<p>##简单实现：</p>
+<p>语法是es6，后面是经过babel编译的代码，不熟悉es6的同学不太影响阅读。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Promise</span></span>&#123;</span><br><span class="line">  <span class="keyword">constructor</span>(fn)&#123;</span><br><span class="line">    <span class="keyword">this</span>.state = <span class="string">'pending'</span>;</span><br><span class="line">    <span class="keyword">this</span>.value = <span class="literal">null</span>;</span><br><span class="line">    <span class="keyword">this</span>.deferreds = [];</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">this</span>._resolve = <span class="keyword">this</span>.resolve.bind(<span class="keyword">this</span>)</span><br><span class="line">    <span class="keyword">this</span>._reject = <span class="keyword">this</span>.reject.bind(<span class="keyword">this</span>)</span><br><span class="line">    fn(<span class="keyword">this</span>._resolve,<span class="keyword">this</span>._reject)</span><br><span class="line">  &#125;</span><br><span class="line">  handle(deferred) &#123; </span><br><span class="line">	    <span class="keyword">if</span> (<span class="keyword">this</span>.state === <span class="string">'pending'</span>) &#123;</span><br><span class="line">	        <span class="keyword">this</span>.deferreds.push(deferred);</span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">	    &#125;</span><br><span class="line">	    <span class="keyword">var</span> cb = <span class="keyword">this</span>.state === <span class="string">'fulfilled'</span> ? deferred.onFulfilled : deferred.onRejected,</span><br><span class="line">	        ret;</span><br><span class="line">	    <span class="keyword">if</span> (cb === <span class="literal">null</span>) &#123;</span><br><span class="line">	        cb = <span class="keyword">this</span>.state === <span class="string">'fulfilled'</span> ? deferred.resolve : deferred.reject;</span><br><span class="line">	        cb(<span class="keyword">this</span>.value);</span><br><span class="line">	        <span class="keyword">return</span>;</span><br><span class="line">	    &#125;</span><br><span class="line">	    <span class="keyword">try</span> &#123;</span><br><span class="line">	        ret = cb(<span class="keyword">this</span>.value);</span><br><span class="line">	        deferred.resolve(ret);</span><br><span class="line">	    &#125; <span class="keyword">catch</span> (e) &#123;</span><br><span class="line">	        deferred.reject(e);</span><br><span class="line">	    &#125; </span><br><span class="line">	&#125;</span><br><span class="line">  resolve(newValue) &#123;</span><br><span class="line">      <span class="keyword">if</span> (newValue &amp;&amp; (<span class="keyword">typeof</span> newValue === <span class="string">'object'</span> || <span class="keyword">typeof</span> newValue === <span class="string">'function'</span>)) &#123;</span><br><span class="line">          <span class="keyword">var</span> then = newValue.then;</span><br><span class="line">          <span class="keyword">if</span> (<span class="keyword">typeof</span> then === <span class="string">'function'</span>) &#123;</span><br><span class="line">              then.call(newValue, <span class="keyword">this</span>.resolve, <span class="keyword">this</span>.reject);</span><br><span class="line">              <span class="keyword">return</span>;</span><br><span class="line">          &#125;</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="keyword">this</span>.state = <span class="string">'fulfilled'</span>;</span><br><span class="line">      <span class="keyword">this</span>.value = newValue;</span><br><span class="line">      <span class="keyword">this</span>.finale();</span><br><span class="line">  &#125;</span><br><span class="line">  reject(reason) &#123;</span><br><span class="line">      <span class="keyword">this</span>.state = <span class="string">'rejected'</span>;</span><br><span class="line">      <span class="keyword">this</span>.value = reason;</span><br><span class="line">      <span class="keyword">this</span>.finale();</span><br><span class="line">  &#125;</span><br><span class="line">  finale() &#123;</span><br><span class="line">      setTimeout(<span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">          <span class="keyword">this</span>.deferreds.forEach(<span class="function"><span class="keyword">function</span> (<span class="params">deferred</span>) </span>&#123;</span><br><span class="line">              <span class="keyword">this</span>.handle(deferred);</span><br><span class="line">          &#125;.bind(<span class="keyword">this</span>));</span><br><span class="line">      &#125;.bind(<span class="keyword">this</span>), <span class="number">0</span>);</span><br><span class="line">  &#125;</span><br><span class="line">  then(onFulfilled, onRejected)&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">new</span> <span class="built_in">Promise</span>(<span class="function"><span class="keyword">function</span> (<span class="params">resolve, reject</span>) </span>&#123;</span><br><span class="line">            <span class="keyword">this</span>.handle(&#123;</span><br><span class="line">                onFulfilled: onFulfilled || <span class="literal">null</span>,</span><br><span class="line">                onRejected: onRejected || <span class="literal">null</span>,</span><br><span class="line">                resolve: resolve,</span><br><span class="line">                reject: reject</span><br><span class="line">            &#125;);</span><br><span class="line">        &#125;.bind(<span class="keyword">this</span>));</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//测试</span></span><br><span class="line"><span class="keyword">var</span> a = <span class="keyword">new</span> <span class="built_in">Promise</span>(<span class="function"><span class="keyword">function</span>(<span class="params">res,rej</span>)</span>&#123;</span><br><span class="line">  setTimeout(<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    <span class="keyword">let</span> a = <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">let</span> b = <span class="number">2</span>;</span><br><span class="line">    <span class="keyword">if</span>(<span class="number">1</span>)&#123;</span><br><span class="line">      res(a)</span><br><span class="line">    &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">      rej(b)</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;,<span class="number">2000</span>)</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> b = <span class="keyword">new</span> <span class="built_in">Promise</span>(<span class="function"><span class="keyword">function</span>(<span class="params">res,rej</span>)</span>&#123;</span><br><span class="line">  setTimeout(<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    <span class="keyword">let</span> c = <span class="number">3</span>;</span><br><span class="line">    <span class="keyword">let</span> d = <span class="number">4</span>;</span><br><span class="line">    <span class="keyword">if</span>(<span class="number">1</span>)&#123;</span><br><span class="line">    </span><br><span class="line">      res(c)</span><br><span class="line">    &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">      rej(d)</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;,<span class="number">2000</span>)</span><br><span class="line">&#125;);</span><br><span class="line">a.then(<span class="function"><span class="params">y</span>=&gt;</span><span class="built_in">console</span>.log(y),</span><br><span class="line">  n=&gt;<span class="built_in">console</span>.log(n)</span><br><span class="line">  ).then(<span class="function"><span class="params">()</span>=&gt;</span>&#123;<span class="keyword">return</span> b&#125;).then(<span class="function"><span class="params">y</span>=&gt;</span><span class="built_in">console</span>.log(y))</span><br></pre></td></tr></table></figure>
+<p>编译之后；<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="meta">'use strict'</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> _createClass = (<span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123; <span class="function"><span class="keyword">function</span> <span class="title">defineProperties</span>(<span class="params">target, props</span>) </span>&#123; <span class="keyword">for</span> (<span class="keyword">var</span> i = <span class="number">0</span>; i &lt; props.length; i++) &#123; <span class="keyword">var</span> descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || <span class="literal">false</span>; descriptor.configurable = <span class="literal">true</span>; <span class="keyword">if</span> (<span class="string">'value'</span> <span class="keyword">in</span> descriptor) descriptor.writable = <span class="literal">true</span>; <span class="built_in">Object</span>.defineProperty(target, descriptor.key, descriptor); &#125; &#125; <span class="keyword">return</span> <span class="function"><span class="keyword">function</span> (<span class="params">Constructor, protoProps, staticProps</span>) </span>&#123; <span class="keyword">if</span> (protoProps) defineProperties(Constructor.prototype, protoProps); <span class="keyword">if</span> (staticProps) defineProperties(Constructor, staticProps); <span class="keyword">return</span> Constructor; &#125;; &#125;)();</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">_classCallCheck</span>(<span class="params">instance, Constructor</span>) </span>&#123; <span class="keyword">if</span> (!(instance <span class="keyword">instanceof</span> Constructor)) &#123; <span class="keyword">throw</span> <span class="keyword">new</span> <span class="built_in">TypeError</span>(<span class="string">'Cannot call a class as a function'</span>); &#125; &#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> <span class="built_in">Promise</span> = (<span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="function"><span class="keyword">function</span> <span class="title">Promise</span>(<span class="params">fn</span>) </span>&#123;</span><br><span class="line">    _classCallCheck(<span class="keyword">this</span>, <span class="built_in">Promise</span>);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">this</span>.state = <span class="string">'pending'</span>;</span><br><span class="line">    <span class="keyword">this</span>.value = <span class="literal">null</span>;</span><br><span class="line">    <span class="keyword">this</span>.deferreds = [];</span><br><span class="line">    <span class="keyword">this</span>.resolve = <span class="keyword">this</span>.resolve.bind(<span class="keyword">this</span>);</span><br><span class="line">    <span class="keyword">this</span>.reject = <span class="keyword">this</span>.reject.bind(<span class="keyword">this</span>);</span><br><span class="line">    fn(<span class="keyword">this</span>.resolve, <span class="keyword">this</span>.reject);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  _createClass(<span class="built_in">Promise</span>, [&#123;</span><br><span class="line">    key: <span class="string">'handle'</span>,</span><br><span class="line">    value: <span class="function"><span class="keyword">function</span> <span class="title">handle</span>(<span class="params">deferred</span>) </span>&#123;</span><br><span class="line"></span><br><span class="line">      <span class="keyword">if</span> (<span class="keyword">this</span>.state === <span class="string">'pending'</span>) &#123;</span><br><span class="line">        <span class="keyword">this</span>.deferreds.push(deferred);</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="keyword">var</span> cb = <span class="keyword">this</span>.state === <span class="string">'fulfilled'</span> ? deferred.onFulfilled : deferred.onRejected,</span><br><span class="line">          ret;</span><br><span class="line">      <span class="keyword">if</span> (cb === <span class="literal">null</span>) &#123;</span><br><span class="line">        cb = <span class="keyword">this</span>.state === <span class="string">'fulfilled'</span> ? deferred.resolve : deferred.reject;</span><br><span class="line">        cb(<span class="keyword">this</span>.value);</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="keyword">try</span> &#123;</span><br><span class="line">        ret = cb(<span class="keyword">this</span>.value);</span><br><span class="line">        deferred.resolve(ret);</span><br><span class="line">      &#125; <span class="keyword">catch</span> (e) &#123;</span><br><span class="line">        deferred.reject(e);</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;, &#123;</span><br><span class="line">    key: <span class="string">'resolve'</span>,</span><br><span class="line">    value: <span class="function"><span class="keyword">function</span> <span class="title">resolve</span>(<span class="params">newValue</span>) </span>&#123;</span><br><span class="line">      <span class="keyword">if</span> (newValue &amp;&amp; (<span class="keyword">typeof</span> newValue === <span class="string">'object'</span> || <span class="keyword">typeof</span> newValue === <span class="string">'function'</span>)) &#123;</span><br><span class="line">        <span class="keyword">var</span> then = newValue.then;</span><br><span class="line">        <span class="keyword">if</span> (<span class="keyword">typeof</span> then === <span class="string">'function'</span>) &#123;</span><br><span class="line">          then.call(newValue, <span class="keyword">this</span>.resolve, <span class="keyword">this</span>.reject);</span><br><span class="line">          <span class="keyword">return</span>;</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="keyword">this</span>.state = <span class="string">'fulfilled'</span>;</span><br><span class="line">      <span class="keyword">this</span>.value = newValue;</span><br><span class="line">      <span class="keyword">this</span>.finale();</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;, &#123;</span><br><span class="line">    key: <span class="string">'reject'</span>,</span><br><span class="line">    value: <span class="function"><span class="keyword">function</span> <span class="title">reject</span>(<span class="params">reason</span>) </span>&#123;</span><br><span class="line">      <span class="keyword">this</span>.state = <span class="string">'rejected'</span>;</span><br><span class="line">      <span class="keyword">this</span>.value = reason;</span><br><span class="line">      <span class="keyword">this</span>.finale();</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;, &#123;</span><br><span class="line">    key: <span class="string">'finale'</span>,</span><br><span class="line">    value: <span class="function"><span class="keyword">function</span> <span class="title">finale</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">      setTimeout((<span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">        <span class="built_in">console</span>.log(<span class="keyword">this</span>);</span><br><span class="line">        <span class="keyword">this</span>.deferreds.forEach((<span class="function"><span class="keyword">function</span> (<span class="params">deferred</span>) </span>&#123;</span><br><span class="line"></span><br><span class="line">          <span class="keyword">this</span>.handle(deferred);</span><br><span class="line">        &#125;).bind(<span class="keyword">this</span>));</span><br><span class="line">      &#125;).bind(<span class="keyword">this</span>), <span class="number">0</span>);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;, &#123;</span><br><span class="line">    key: <span class="string">'then'</span>,</span><br><span class="line">    value: <span class="function"><span class="keyword">function</span> <span class="title">then</span>(<span class="params">onFulfilled, onRejected</span>) </span>&#123;</span><br><span class="line"></span><br><span class="line">      <span class="keyword">return</span> <span class="keyword">new</span> <span class="built_in">Promise</span>((<span class="function"><span class="keyword">function</span> (<span class="params">resolve, reject</span>) </span>&#123;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">this</span>.handle(&#123;</span><br><span class="line">          onFulfilled: onFulfilled || <span class="literal">null</span>,</span><br><span class="line">          onRejected: onRejected || <span class="literal">null</span>,</span><br><span class="line">          resolve: resolve,</span><br><span class="line">          reject: reject</span><br><span class="line">        &#125;);</span><br><span class="line">      &#125;).bind(<span class="keyword">this</span>));</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;]);</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> <span class="built_in">Promise</span>;</span><br><span class="line">&#125;)();</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> a = <span class="keyword">new</span> <span class="built_in">Promise</span>(<span class="function"><span class="keyword">function</span> (<span class="params">res, rej</span>) </span>&#123;</span><br><span class="line">  setTimeout(<span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="keyword">var</span> a = <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">var</span> b = <span class="number">2</span>;</span><br><span class="line">    <span class="keyword">if</span> (<span class="number">1</span>) &#123;</span><br><span class="line">      res(a);</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">      rej(b);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;, <span class="number">2000</span>);</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> b = <span class="keyword">new</span> <span class="built_in">Promise</span>(<span class="function"><span class="keyword">function</span> (<span class="params">res, rej</span>) </span>&#123;</span><br><span class="line">  setTimeout(<span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="keyword">var</span> c = <span class="number">3</span>;</span><br><span class="line">    <span class="keyword">var</span> d = <span class="number">4</span>;</span><br><span class="line">    <span class="keyword">if</span> (<span class="number">1</span>) &#123;</span><br><span class="line"></span><br><span class="line">      res(c);</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">      rej(d);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;, <span class="number">2000</span>);</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line">a.then(<span class="function"><span class="keyword">function</span> (<span class="params">y</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="built_in">console</span>.log(y);</span><br><span class="line">&#125;, <span class="function"><span class="keyword">function</span> (<span class="params">n</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="built_in">console</span>.log(n);</span><br><span class="line">&#125;).then(<span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> b;</span><br><span class="line">&#125;).then(<span class="function"><span class="keyword">function</span> (<span class="params">y</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="built_in">console</span>.log(y);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure></p>
+
       
 
       
@@ -840,6 +820,10 @@
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">html</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">js</a>
               </li>
              
@@ -856,7 +840,7 @@
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">html</a>
+                <a href="javascript:void(0)" class="js-tag color1">javascript</a>
               </li>
              
               <li class="article-tag-list-item">
