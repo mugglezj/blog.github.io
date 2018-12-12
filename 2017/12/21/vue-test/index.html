@@ -173,7 +173,7 @@
         <h3 id="从测试命令开始："><a href="#从测试命令开始：" class="headerlink" title="从测试命令开始："></a>从测试命令开始：</h3><p>入口测试指令npm run test;<br>在package.json 当中；<br><figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">"<span class="selector-tag">test</span>": "<span class="selector-tag">npm</span> <span class="selector-tag">run</span> <span class="selector-tag">lint</span> &amp;&amp; <span class="selector-tag">flow</span> <span class="selector-tag">check</span> &amp;&amp; <span class="selector-tag">npm</span> <span class="selector-tag">run</span> <span class="selector-tag">test</span><span class="selector-pseudo">:types</span> &amp;&amp; <span class="selector-tag">npm</span> <span class="selector-tag">run</span> <span class="selector-tag">test</span><span class="selector-pseudo">:cover</span> &amp;&amp; <span class="selector-tag">npm</span> <span class="selector-tag">run</span> <span class="selector-tag">test</span><span class="selector-pseudo">:e2e</span> <span class="selector-tag">--</span> <span class="selector-tag">--env</span> <span class="selector-tag">phantomjs</span> &amp;&amp; <span class="selector-tag">npm</span> <span class="selector-tag">run</span> <span class="selector-tag">test</span><span class="selector-pseudo">:ssr</span> &amp;&amp; <span class="selector-tag">npm</span> <span class="selector-tag">run</span> <span class="selector-tag">test</span><span class="selector-pseudo">:weex"</span>,</span><br></pre></td></tr></table></figure></p>
 <p>前三条是语法检测，按照各自的代码格式或者语法配置说明配置好之后就能顺利跑起来，并且带自动纠正功能。</p>
 <a id="more"></a>
-<h3 id="npm-run-test-cover"><a href="#npm-run-test-cover" class="headerlink" title="npm run test:cover"></a>npm run test:cover</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">"test:cover"</span>: <span class="string">"karma start test/unit/karma.cover.config.js"</span></span><br></pre></td></tr></table></figure>
+<h3 id="npm-run-test-cover"><a href="#npm-run-test-cover" class="headerlink" title="npm run test:cover"></a>npm run test:cover</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">"test:cover"</span>: <span class="string">"karma start test/unit/karma.cover.config.js"</span></span><br></pre></td></tr></table></figure>
 <p>单元测试部分，能够生成测试覆盖率报告；<br>首先看入口测试配置：karma.cover.config.js；<br>第一行导入了所有测试都引入的基本配置文件karma.base.config.js;其中定义了单元测试的基本框架以及入口文件等；</p>
 <p>结合两份配置分析。</p>
 <p>首先是一些基本概念：</p>
@@ -303,6 +303,15 @@
 
   
 <nav id="article-nav">
+  
+    <a href="/2018/12/12/some-code/" id="article-nav-newer" class="article-nav-link-wrap">
+      <i class="icon-circle-left"></i>
+      <div class="article-nav-title">
+        
+          个人兴趣写的demo
+        
+      </div>
+    </a>
   
   
     <a href="/2017/03/02/mockjs/" id="article-nav-older" class="article-nav-link-wrap">
